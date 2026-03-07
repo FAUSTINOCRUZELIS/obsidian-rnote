@@ -1,0 +1,118 @@
+import { Editor, TFile } from "obsidian";
+import { deleteRNoteAndLinkedFile, findCorrespondingRNote, openXournalppFile, renameRNoteFile } from "./rnoteActions";
+import RNotePlugin from "main";
+import { exportAllRNote, exportRNote } from "./rnoteExport";
+import CreateRNoteModalManager from "./CreateRNoteModalManager";
+import RenameModal from "./modals/RenameModal";
+import SearchRNoteModal from "./modals/SearchRNoteModal";
+
+export function createCommands(plugin: RNotePlugin) {
+    plugin.addCommand({
+        id: "open-in-rnote",
+        name: "Open current note",
+        checkCallback: (checking: boolean) => {
+            let filePath = plugin.app.workspace.getActiveFile()?.path;
+            let fileExtension = plugin.app.workspace.getActiveFile()?.extension;
+            if (!filePath || (fileExtension !== "pdf" && fileExtension !== "svg" && fileExtension !== "rnote")) return false;
+
+            let rnoteFile = fileExtension === "rnote" ? plugin.app.workspace.getActiveFile() : findCorrespondingRNote(filePath, plugin);
+            if (!rnoteFile) return false;
+
+            if (!checking) openXournalppFile(rnoteFile, plugin);
+            return true;
+        },
+    });
+
+    plugin.addCommand({
+        id: "create-new-rnote",
+        name: "Create a new note",
+        callback: async () => {
+            new CreateRNoteModalManager(plugin.app, plugin, "");
+        },
+    });
+
+    plugin.addCommand({
+        id: "create-new-rnote-and-link",
+        name: "Create a new note and insert link",
+        editorCallback: async (editor: Editor) => {
+            new CreateRNoteModalManager(plugin.app, plugin, "", editor);
+        },
+    });
+
+    plugin.addCommand({
+        id: "export-rnote",
+        name: "Export all notes",
+        callback: async () => {
+            exportAllRNote(plugin);
+        },
+    });
+
+    plugin.addCommand({
+        id: "export-current-rnote",
+        name: "Update current export",
+        checkCallback: (checking: boolean) => {
+            let filePath = plugin.app.workspace.getActiveFile()?.path as string;
+
+            if (filePath && (filePath.includes(".pdf") || filePath.includes(".svg") || filePath.includes(".rnote"))) {
+                if (!checking) {
+                    filePath = filePath?.replace(".pdf", ".rnote").replace(".svg", ".rnote");
+                    exportRNote(plugin, [filePath]);
+                }
+                return true;
+            }
+            return false;
+        },
+    });
+
+    plugin.addCommand({
+        id: "rename-rnote",
+        name: "Rename current export and corresponding RNote note",
+        checkCallback: (checking: boolean) => {
+            let file = plugin.app.workspace.getActiveFile();
+            if (!file || (!file.name.endsWith(".pdf") && !file.name.endsWith(".svg"))) return false;
+
+            let rnoteFile = findCorrespondingRNote(file.path, plugin);
+            if (!rnoteFile) return false;
+
+            if (!checking) {
+                const renameFile = (fileName: string) =>
+                    renameRNoteFile(plugin, rnoteFile as TFile, file as TFile, fileName);
+                new RenameModal(plugin.app, rnoteFile.path, renameFile).open();
+            }
+            return true;
+        },
+    });
+
+    plugin.addCommand({
+        id: "delete-rnote",
+        name: "Delete current export and corresponding RNote note",
+        checkCallback: (checking: boolean) => {
+            let file = plugin.app.workspace.getActiveFile();
+            if (!file || (!file.name.endsWith(".pdf") && !file.name.endsWith(".svg"))) return false;
+
+            let rnoteFile = findCorrespondingRNote(file.path, plugin);
+            if (!rnoteFile) return false;
+
+            if (!checking) {
+                deleteRNoteAndLinkedFile(plugin, rnoteFile, file);
+            }
+            return true;
+        },
+    });
+
+    plugin.addCommand({
+        id: "rnote-search-and-open",
+        name: "Search and open RNote note",
+        callback: () => {
+            const searchModal = new SearchRNoteModal(plugin.app, plugin);
+            searchModal.setPlaceholder("Search for a RNote note");
+            searchModal.setInstructions([
+                { command: "Arrows", purpose: "to navigate" },
+                { command: "Tab", purpose: "to autocomplete" },
+                { command: "Enter", purpose: "to open the corresponding PDF" },
+                { command: "Shift + Enter", purpose: "to open in RNote" },
+            ]);
+            searchModal.open();
+        },
+    });
+}

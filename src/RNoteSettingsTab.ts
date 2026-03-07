@@ -1,0 +1,184 @@
+import RNotePlugin from "main";
+import { App, Setting, PluginSettingTab, addIcon, getIcon, TFile, DropdownComponent } from "obsidian";
+import ConfirmationModal from "./modals/ConfirmationModal";
+import { exportAllRNote } from "src/rnoteExport";
+import parseFileName from "./fileNameParser";
+import { newFilePlaceholders } from "./newFilePlaceholders";
+import { NewFilePlacholderHelpModal } from "./modals/NewFilePlacholderHelpModal";
+
+export class RNoteSettingsTab extends PluginSettingTab {
+	plugin: RNotePlugin;
+  
+	constructor(app: App, plugin: RNotePlugin) {
+		super(app, plugin);
+		this.plugin = plugin;
+	}
+
+	display(): void {
+		const { containerEl } = this;
+
+		containerEl.empty();
+
+		new Setting(containerEl)
+			.setName("Auto export RNote files")
+			.setDesc(
+				"Automatically export RNote files to PDF upon modification."
+			)
+			.addToggle((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.autoExport)
+					.onChange(async (value) => {
+						if (value) {
+							const initialValue =
+								this.plugin.settings.autoExport;
+							const confirmationModal = new ConfirmationModal(
+								this.app,
+								async () => {
+									this.plugin.settings.autoExport = true;
+									await this.plugin.saveSettings();
+									toggle.setValue(true);
+
+									exportAllRNote(this.plugin);
+								},
+								async () => {
+									this.plugin.settings.autoExport = false;
+									await this.plugin.saveSettings();
+									toggle.setValue(false);
+								},
+								initialValue,
+								toggle
+							);
+							confirmationModal.onClose = () => {
+								if (!confirmationModal.confirmed) {
+									toggle.setValue(false);
+								}
+							};
+							confirmationModal.open();
+						} else {
+							this.plugin.settings.autoExport = false;
+							await this.plugin.saveSettings();
+							toggle.setValue(false);
+						}
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("RNote installation path")
+			.setDesc(
+				"The path where RNote is installed (leave empty for system default)."
+			)
+			.addText((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.rnotePath)
+					.onChange(async (value) => {
+						this.plugin.settings.rnotePath = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("RNote templates folder")
+			.setDesc(
+				"Relative path to the folder that contains your RNote .rnote templates."
+			)
+			.addText((text) => {
+				text.setValue(this.plugin.settings.templatesFolder)
+					.setPlaceholder("e.g. templates/rnote")
+					.onChange(async (value) => {
+						this.plugin.settings.templatesFolder = value;
+						await this.plugin.saveSettings();
+					});
+
+				text.inputEl.addEventListener("blur", () => {
+					this.display();
+				});
+
+				text.inputEl.addEventListener("keydown", (e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						text.inputEl.blur();
+					}
+				});
+			});
+
+
+		new Setting(containerEl)
+			.setName("Default RNote template")
+			.setDesc(
+				"The default template to use when creating new RNote files from the templates folder."
+			)
+			.addDropdown((dropdown) => {
+				const templatesFolder =
+					this.plugin.settings.templatesFolder?.trim();
+				let templateFiles: TFile[] = [];
+				if (templatesFolder) {
+					templateFiles = this.app.vault
+						.getFiles()
+						.filter(
+							(f: TFile) =>
+								f.path.startsWith(templatesFolder + "/") &&
+								f.extension === "rnote"
+						);
+				}
+
+				if (templateFiles.length === 0) {
+					dropdown.addOption("", "No templates found");
+				} else {
+					templateFiles.forEach((file) =>
+						dropdown.addOption(file.path, file.path)
+					);
+				}
+				dropdown
+					.setValue(this.plugin.settings.defaultTemplatePath || "")
+					.onChange(async (value) => {
+						this.plugin.settings.defaultTemplatePath = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		
+		new Setting(containerEl)
+			.setName("Default path for new RNote files")
+			.setDesc(
+				"The relative path for new RNote files. This folder will be used unless a full path is specified during file creation (leave empty to use root folder)."
+			)
+			.addText((toggle) => {
+				toggle
+					.setValue(this.plugin.settings.defaultNewFilePath)
+					.setPlaceholder("e.g. Notes")
+					.onChange(async (value) => {
+						this.plugin.settings.defaultNewFilePath = value;
+						await this.plugin.saveSettings();
+					});
+			});
+  
+    // Default Name
+    let defaultNameDesc =
+        "The default name for new RNote files. Use placeholders `${}` to insert dynamic values. Preview: ";
+    let defaultNameSetting = new Setting(containerEl)
+        .setName("Default name for new RNote files")
+        .addText((toggle) => {
+            toggle
+                .setValue(this.plugin.settings.defaultNewFileName)
+                .setPlaceholder("e.g. ${MM}-${cursor}-note")
+                .onChange(async (value) => {
+                    this.plugin.settings.defaultNewFileName = value;
+                    await this.plugin.saveSettings();
+
+                    descEl.setText(defaultNameDesc + parseFileName(value, this.plugin, true).text);
+                });
+        });
+
+    const descEl = defaultNameSetting.setDesc(
+        defaultNameDesc + parseFileName(this.plugin.settings.defaultNewFileName, this.plugin, true).text
+    ).descEl;
+
+    const titleEl = defaultNameSetting.nameEl;
+    const helpIcon = titleEl.createEl("span");
+    helpIcon.appendChild(getIcon("help-circle")!);
+    helpIcon.addClass("rnote-help-icon");
+    helpIcon.onclick = () => {
+        new NewFilePlacholderHelpModal(this.app, newFilePlaceholders).open();
+    };
+  }
+}
