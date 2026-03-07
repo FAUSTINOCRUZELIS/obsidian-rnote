@@ -1,4 +1,0 @@
-
-> rnote@1.1.2 build
-> tsc -noEmit -skipLibCheck && node esbuild.config.mjs production
-
