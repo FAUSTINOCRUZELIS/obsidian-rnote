@@ -8,7 +8,7 @@ import SearchRNoteModal from "./modals/SearchRNoteModal";
 
 export function createCommands(plugin: RNotePlugin) {
     plugin.addCommand({
-        id: "open-in-rnote",
+        id: "open",
         name: "Open current note",
         checkCallback: (checking: boolean) => {
             let filePath = plugin.app.workspace.getActiveFile()?.path;
@@ -18,37 +18,37 @@ export function createCommands(plugin: RNotePlugin) {
             let rnoteFile = fileExtension === "rnote" ? plugin.app.workspace.getActiveFile() : findCorrespondingRNote(filePath, plugin);
             if (!rnoteFile) return false;
 
-            if (!checking) openXournalppFile(rnoteFile, plugin);
+            if (!checking) void openXournalppFile(rnoteFile, plugin);
             return true;
         },
     });
 
     plugin.addCommand({
-        id: "create-new-rnote",
+        id: "create-new",
         name: "Create a new note",
-        callback: async () => {
+        callback: () => {
             new CreateRNoteModalManager(plugin.app, plugin, "");
         },
     });
 
     plugin.addCommand({
-        id: "create-new-rnote-and-link",
+        id: "create-new-and-link",
         name: "Create a new note and insert link",
-        editorCallback: async (editor: Editor) => {
+        editorCallback: (editor: Editor) => {
             new CreateRNoteModalManager(plugin.app, plugin, "", editor);
         },
     });
 
     plugin.addCommand({
-        id: "export-rnote",
+        id: "export-all",
         name: "Export all notes",
-        callback: async () => {
+        callback: () => {
             exportAllRNote(plugin);
         },
     });
 
     plugin.addCommand({
-        id: "export-current-rnote",
+        id: "export-current",
         name: "Update current export",
         checkCallback: (checking: boolean) => {
             let filePath = plugin.app.workspace.getActiveFile()?.path as string;
@@ -65,8 +65,8 @@ export function createCommands(plugin: RNotePlugin) {
     });
 
     plugin.addCommand({
-        id: "rename-rnote",
-        name: "Rename current export and corresponding RNote note",
+        id: "rename",
+        name: "Rename current export and corresponding note",
         checkCallback: (checking: boolean) => {
             let file = plugin.app.workspace.getActiveFile();
             if (!file || (!file.name.endsWith(".pdf") && !file.name.endsWith(".svg"))) return false;
@@ -75,8 +75,11 @@ export function createCommands(plugin: RNotePlugin) {
             if (!rnoteFile) return false;
 
             if (!checking) {
-                const renameFile = (fileName: string) =>
-                    renameRNoteFile(plugin, rnoteFile as TFile, file as TFile, fileName);
+                const renameFile = (fileName: string) => {
+                    if (rnoteFile instanceof TFile && file instanceof TFile) {
+                        void renameRNoteFile(plugin, rnoteFile, file, fileName);
+                    }
+                };
                 new RenameModal(plugin.app, rnoteFile.path, renameFile).open();
             }
             return true;
@@ -84,8 +87,8 @@ export function createCommands(plugin: RNotePlugin) {
     });
 
     plugin.addCommand({
-        id: "delete-rnote",
-        name: "Delete current export and corresponding RNote note",
+        id: "delete",
+        name: "Delete current export and corresponding note",
         checkCallback: (checking: boolean) => {
             let file = plugin.app.workspace.getActiveFile();
             if (!file || (!file.name.endsWith(".pdf") && !file.name.endsWith(".svg"))) return false;
@@ -101,8 +104,8 @@ export function createCommands(plugin: RNotePlugin) {
     });
 
     plugin.addCommand({
-        id: "rnote-search-and-open",
-        name: "Search and open RNote note",
+        id: "search-and-open",
+        name: "Search and open note",
         callback: () => {
             const searchModal = new SearchRNoteModal(plugin.app, plugin);
             searchModal.setPlaceholder("Search for a RNote note");

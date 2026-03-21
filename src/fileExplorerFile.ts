@@ -13,7 +13,7 @@ function observeFileExplorer(plugin: RNotePlugin) {
     let fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
 
     fileExplorers.forEach((fileExplorer) => {
-        let container = (fileExplorer.view as any)?.containerEl;
+        let container = (fileExplorer.view as { containerEl?: HTMLElement })?.containerEl;
 
         if (container) {
             // Observe changes in the file explorer DOM
@@ -31,20 +31,20 @@ function applyXournalppTags(plugin: RNotePlugin) {
     let fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
 
     fileExplorers.forEach((fileExplorer) => {
-        let allFiles: { [key: string]: { tagEl: HTMLElement } } = (fileExplorer.view as any)?.fileItems;
+        let allFiles: { [key: string]: { tagEl: HTMLElement } } = (fileExplorer.view as unknown as { fileItems: { [key: string]: { tagEl: HTMLElement } } })?.fileItems;
         if (!allFiles) return;
 
         Object.entries(allFiles).forEach(([filePath, value]) => {
             if (filePath.endsWith(".pdf") || filePath.endsWith(".svg")) {
                 let rnoteFile = findCorrespondingRNote(filePath, plugin);
-                if (rnoteFile && value?.tagEl) {
+                if (rnoteFile instanceof TFile && value?.tagEl) {
                     const tagEl = value.tagEl as HTMLElement;
 
                     if (tagEl && (tagEl.innerText != "RNOTE" || !tagEl.classList.contains("clickable-tag"))) {
                         tagEl.innerText = "RNOTE";
                         tagEl.classList.add("clickable-tag");
                         tagEl.onclick = () => {
-                            openXournalppFile(rnoteFile as TFile, plugin);
+                            void openXournalppFile(rnoteFile, plugin);
                         };
                     }
                 }

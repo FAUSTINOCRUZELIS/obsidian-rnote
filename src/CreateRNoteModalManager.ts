@@ -44,8 +44,8 @@ export default class CreateRNoteModalManager {
             new RNoteFileNameModal(
                 this.plugin.app,
                 this.plugin,
-                (fileName, templatePath, exportFormat) => this.onCreate(folderPath, fileName, exportFormat, templatePath),
-                (fileName, templatePath, exportFormat) => this.onCreateAndOpen(folderPath, fileName, exportFormat, templatePath),
+                (fileName, templatePath, exportFormat) => { this.onCreate(folderPath, fileName, exportFormat, templatePath); },
+                (fileName, templatePath, exportFormat) => { this.onCreateAndOpen(folderPath, fileName, exportFormat, templatePath); },
                 templates,
                 this.plugin.settings.defaultTemplatePath
             )
@@ -97,7 +97,7 @@ export default class CreateRNoteModalManager {
         const filePath = folderPath === "/" ? fileName : `${folderPath}/${fileName}`;
         const file = await this.waitForFileToBeIndexed(filePath + ".rnote");
         if (file) {
-            openXournalppFile(file, this.plugin);
+            await openXournalppFile(file, this.plugin);
         } else {
             console.error("Failed to open the file after creation.");
             new Notice("Failed to open the file after creation.");

@@ -6,7 +6,7 @@ export function addCreateXournalppNavIcon(plugin: RNotePlugin) {
     let fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
 
     fileExplorers.forEach((fileExplorer) => {
-        const fileExplorerView = fileExplorer.view as any;
+        const fileExplorerView = fileExplorer.view as unknown as { headerDom?: { navButtonsEl?: HTMLElement } };
         const headerDom = fileExplorerView?.headerDom;
         const navButtonsEl = headerDom?.navButtonsEl;
 

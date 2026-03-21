@@ -8,6 +8,8 @@ import { createRibbonIcons } from 'src/ribbonIcons';
 interface RNotePluginSettings {
     autoExport: boolean;
     rnotePath: string;
+    customGuiCommand: string;
+    customCliCommand: string;
     templatesFolder: string;
     defaultTemplatePath: string;
     defaultNewFilePath: string;
@@ -18,6 +20,8 @@ interface RNotePluginSettings {
 const DEFAULT_SETTINGS: Partial<RNotePluginSettings> = {
     autoExport: false,
     rnotePath: "",
+    customGuiCommand: "",
+    customCliCommand: "",
     templatesFolder: "",
     defaultTemplatePath: "",
     defaultNewFilePath: "",
@@ -34,7 +38,7 @@ export default class RNotePlugin extends Plugin {
         setupListeners(this);
         createCommands(this);
         createRibbonIcons(this);
-        checkRNoteSetup(this);
+        await checkRNoteSetup(this);
     }
 
     async loadSettings() {

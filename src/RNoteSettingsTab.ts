@@ -1,5 +1,5 @@
 import RNotePlugin from "main";
-import { App, Setting, PluginSettingTab, addIcon, getIcon, TFile, DropdownComponent } from "obsidian";
+import { App, Setting, PluginSettingTab, getIcon, TFile } from "obsidian";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import { exportAllRNote } from "src/rnoteExport";
 import parseFileName from "./fileNameParser";
@@ -27,7 +27,7 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			.addToggle((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.autoExport)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						if (value) {
 							const initialValue =
 								this.plugin.settings.autoExport;
@@ -56,7 +56,7 @@ export class RNoteSettingsTab extends PluginSettingTab {
 							confirmationModal.open();
 						} else {
 							this.plugin.settings.autoExport = false;
-							await this.plugin.saveSettings();
+							void this.plugin.saveSettings();
 							toggle.setValue(false);
 						}
 					});
@@ -70,9 +70,39 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			.addText((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.rnotePath)
-					.onChange(async (value) => {
+					.onChange((value) => {
 						this.plugin.settings.rnotePath = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Custom RNote GUI command")
+			.setDesc(
+				"Explicit command to launch the RNote GUI (useful for Flatpak/Snap). Overrides installation path if both CLI and GUI custom commands are provided."
+			)
+			.addText((text) => {
+				text
+					.setValue(this.plugin.settings.customGuiCommand)
+					.setPlaceholder("e.g. flatpak run com.github.flxzt.rnote")
+					.onChange((value) => {
+						this.plugin.settings.customGuiCommand = value;
+						void this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName("Custom RNote CLI command")
+			.setDesc(
+				"Explicit command to launch the RNote CLI (useful for Flatpak/Snap)."
+			)
+			.addText((text) => {
+				text
+					.setValue(this.plugin.settings.customCliCommand)
+					.setPlaceholder("e.g. flatpak run --command=rnote-cli com.github.flxzt.rnote")
+					.onChange((value) => {
+						this.plugin.settings.customCliCommand = value;
+						void this.plugin.saveSettings();
 					});
 			});
 
@@ -84,9 +114,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			.addText((text) => {
 				text.setValue(this.plugin.settings.templatesFolder)
 					.setPlaceholder("e.g. templates/rnote")
-					.onChange(async (value) => {
+					.onChange((value) => {
 						this.plugin.settings.templatesFolder = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 					});
 
 				text.inputEl.addEventListener("blur", () => {
@@ -130,9 +160,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
 				}
 				dropdown
 					.setValue(this.plugin.settings.defaultTemplatePath || "")
-					.onChange(async (value) => {
+					.onChange((value) => {
 						this.plugin.settings.defaultTemplatePath = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 					});
 			});
 
@@ -145,10 +175,10 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			.addText((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.defaultNewFilePath)
-					.setPlaceholder("e.g. Notes")
-					.onChange(async (value) => {
+					.setPlaceholder("e.g. notes")
+					.onChange((value) => {
 						this.plugin.settings.defaultNewFilePath = value;
-						await this.plugin.saveSettings();
+						void this.plugin.saveSettings();
 					});
 			});
   
@@ -161,9 +191,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
             toggle
                 .setValue(this.plugin.settings.defaultNewFileName)
                 .setPlaceholder("e.g. ${MM}-${cursor}-note")
-                .onChange(async (value) => {
+                .onChange((value) => {
                     this.plugin.settings.defaultNewFileName = value;
-                    await this.plugin.saveSettings();
+                    void this.plugin.saveSettings();
 
                     descEl.setText(defaultNameDesc + parseFileName(value, this.plugin, true).text);
                 });

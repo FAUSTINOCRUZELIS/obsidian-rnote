@@ -10,6 +10,19 @@ export interface RNotePaths {
 export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths | "error"> {
     let errors = []
     let userPath = plugin.settings.rnotePath;
+    let customGui = plugin.settings.customGuiCommand;
+    let customCli = plugin.settings.customCliCommand;
+
+    if (customGui && customCli) {
+        try {
+            await executeCommand(customCli + " --version");
+            return { gui: customGui, cli: customCli };
+        } catch (error) {
+            errors.push("Custom RNote CLI command not working: " + (error as Error).message);
+        }
+    } else if (customGui || customCli) {
+        errors.push("Please provide both custom GUI and CLI commands to override defaults.");
+    }
 
     if (userPath) {
         let userCliPath = userPath;
@@ -22,23 +35,23 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
         }
 
         try {
-			await executeCommand(userCliPath + " --version");
-        	return { gui: userPath, cli: userCliPath };
-		} catch (error) {
+            await executeCommand(userCliPath + " --version");
+            return { gui: userPath, cli: userCliPath };
+        } catch (error) {
             errors.push("User defined RNote path not working: " + error.message)
         }
     }
-     
+
     let aliasPathGui = "rnote";
     let aliasPathCli = "rnote-cli";
-    
+
     try {
         await executeCommand(aliasPathCli + " --version");
         return { gui: aliasPathGui, cli: aliasPathCli };
     } catch (error) {
-        errors.push(error.message)
+        errors.push((error as Error).message);
     }
-    
+
     let windowsGuiPath = '"c:/Program Files/RNote/bin/rnote.exe"';
     let windowsCliPath = '"c:/Program Files/RNote/bin/rnote-cli.exe"';
     if (Platform.isWin) {
@@ -46,7 +59,7 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
             await executeCommand(windowsCliPath + " --version");
             return { gui: windowsGuiPath, cli: windowsCliPath };
         } catch (error) {
-            errors.push(error.message)
+            errors.push((error as Error).message);
         }
     }
 
@@ -57,7 +70,7 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
             await executeCommand(macCliPath + " --version");
             return { gui: macGuiPath, cli: macCliPath };
         } catch (error) {
-            errors.push(error.message)
+            errors.push((error as Error).message);
         }
     }
 

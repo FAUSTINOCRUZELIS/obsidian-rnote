@@ -1,5 +1,5 @@
 import RNotePlugin from "main";
-import { TFile, Notice, DataAdapter, FileSystemAdapter } from "obsidian";
+import { TFile, Notice, FileSystemAdapter } from "obsidian";
 import { checkRNoteSetup } from "./checks";
 import { exec } from "child_process";
 
@@ -68,12 +68,12 @@ export function renameRNoteFile(plugin: RNotePlugin, rnoteFile: TFile, linkedFil
     const filePath = rnoteFile.path.split("/");
     filePath.pop();
     const newPath = filePath?.join("/") + "/" + fileName;
-    plugin.app.fileManager.renameFile(rnoteFile, newPath + ".rnote");
+    void plugin.app.fileManager.renameFile(rnoteFile, newPath + ".rnote");
     const ext = linkedFile.extension;
-    plugin.app.fileManager.renameFile(linkedFile, newPath + "." + ext);
+    void plugin.app.fileManager.renameFile(linkedFile, newPath + "." + ext);
 }
 
 export function deleteRNoteAndLinkedFile(plugin: RNotePlugin, rnoteFile: TFile, linkedFile: TFile) {
-    plugin.app.vault.delete(rnoteFile);
-    plugin.app.vault.delete(linkedFile);
+    void plugin.app.fileManager.trashFile(rnoteFile);
+    void plugin.app.fileManager.trashFile(linkedFile);
 }

@@ -1,13 +1,13 @@
-import { App, Modal } from "obsidian";
+import { App, Modal, ToggleComponent } from "obsidian";
 
 export default class ConfirmationModal extends Modal {
     onConfirm: () => Promise<void>;
     onReject: () => Promise<void>;
     private initialValue: boolean;
-    private toggle: any;
+    private toggle: ToggleComponent;
     public confirmed: boolean = false;
 
-    constructor(app: App, onConfirm: () => Promise<void>, onReject: () => Promise<void>, initialValue: boolean, toggle: any) {
+    constructor(app: App, onConfirm: () => Promise<void>, onReject: () => Promise<void>, initialValue: boolean, toggle: ToggleComponent) {
         super(app);
         this.onConfirm = onConfirm;
         this.onReject = onReject;
@@ -19,24 +19,26 @@ export default class ConfirmationModal extends Modal {
         super.onOpen();
         const { contentEl } = this;
 
-        contentEl.createEl("h2", { text: "Enable Auto Export?" });
+        contentEl.createEl("h2", { text: "Enable auto export?" });
         contentEl.createEl("p", {
-            text: "Enabling auto export might automatically overwrite any same-named files. Do you want to proceed?",
+            text: "Enabling auto export might automatically overwrite any same-named files; do you want to proceed?",
         });
 
         const buttonContainer = contentEl.createDiv({ cls: "modal-button-container" });
 
         const confirmButton = buttonContainer.createEl("button", { text: "Yes" });
-        confirmButton.addEventListener("click", async () => {
+        confirmButton.addEventListener("click", () => {
             this.confirmed = true;
-            await this.onConfirm();
-            this.close();
+            void this.onConfirm().then(() => {
+                this.close();
+            });
         });
 
         const cancelButton = buttonContainer.createEl("button", { text: "No" });
         cancelButton.addEventListener("click", () => {
-            this.onReject();
-            this.close();
+            void this.onReject().then(() => {
+                this.close();
+            });
         });
     }
 
