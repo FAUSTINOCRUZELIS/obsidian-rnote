@@ -12,7 +12,7 @@ export function addXournalppOptionsToFileMenu(menu: Menu, file: TFile | TFolder,
             addExportAsSvgMenu(menu, file, plugin);
             addExportAsPdfMenu(menu, file, plugin);
         } else if (file.extension === "pdf" || file.extension === "svg") {
-            let rnoteFile = findCorrespondingRNote(file.path, plugin);
+            const rnoteFile = findCorrespondingRNote(file.path, plugin);
             if (rnoteFile) {
                 addOpenInXournalppMenu(menu, rnoteFile, plugin);
                 if (file.extension === "pdf") {
@@ -37,7 +37,7 @@ function addOpenInXournalppMenu(menu: Menu, rnoteFile: TFile, plugin: RNotePlugi
         item.setTitle("Open in RNote")
             .setIcon("pen-tool")
             .onClick(() => {
-                openXournalppFile(rnoteFile, plugin);
+                void openXournalppFile(rnoteFile, plugin);
             });
     });
     menu.addItem((item) => {

@@ -31,22 +31,22 @@ export function setupListeners(plugin: RNotePlugin) {
         if (file.extension === "rnote" && plugin.settings.autoExport) exportRNote(plugin, [file.path], false)
     }))
     plugin.app.workspace.onLayoutReady(() => {
-    initialLoad(plugin);
-	    plugin.registerEvent(plugin.app.vault.on("create", (file: TFile) => {
-	        if (file.extension === "rnote" && plugin.settings.autoExport) exportRNote(plugin, [file.path], false)
-	    }))
+        initialLoad(plugin);
+        plugin.registerEvent(plugin.app.vault.on("create", (file: TFile) => {
+            if (file.extension === "rnote" && plugin.settings.autoExport) exportRNote(plugin, [file.path], false)
+        }))
     });
 }
 
 function initialLoad(plugin: RNotePlugin) {
     if (plugin.settings.autoExport) {
-        let files = plugin.app.vault.getFiles();
-        let rnote_files = files.filter(file => file.extension === "rnote");
-        let pdf_files = files.filter(file => file.extension === "pdf");
+        const files = plugin.app.vault.getFiles();
+        const rnote_files = files.filter(file => file.extension === "rnote");
+        const pdf_files = files.filter(file => file.extension === "pdf");
 
-        let filePaths = [];
+        const filePaths = [];
         for (const rnote_file of rnote_files) {
-                let pdf_file = pdf_files.find(pdf => pdf.path === rnote_file.path.replace(".rnote", ".pdf")) || false;
+                const pdf_file = pdf_files.find(pdf => pdf.path === rnote_file.path.replace(".rnote", ".pdf")) || false;
                 let rnote_is_newer = false;
                 if (pdf_file) {
                     rnote_is_newer = rnote_file.stat.mtime > pdf_file.stat.mtime;

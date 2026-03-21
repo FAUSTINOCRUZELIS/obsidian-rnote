@@ -10,7 +10,7 @@ export function addOpenInXournalppToPdfToolbar(file: TFile, plugin: RNotePlugin)
         const oldIcons = document.querySelectorAll('.rnote-open-icon');
         oldIcons.forEach((old) => old.remove())
 
-        let rnoteFile = findCorrespondingRNote(file.path, plugin)
+        const rnoteFile = findCorrespondingRNote(file.path, plugin)
 
         if (rnoteFile) {
             // show toolbar icon
@@ -25,7 +25,7 @@ export function addOpenInXournalppToPdfToolbar(file: TFile, plugin: RNotePlugin)
 
 
 export function createPdfToolbarButton(pdfToolbar: HTMLElement, rnoteFile: TFile, plugin: RNotePlugin): void {
-    let rnoteButton = new ButtonComponent(pdfToolbar)
+    const rnoteButton = new ButtonComponent(pdfToolbar)
         .setClass("clickable-icon")
         .setClass("rnote-open-icon")
         .setButtonText('Edit in RNote')

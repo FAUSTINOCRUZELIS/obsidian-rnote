@@ -23,9 +23,9 @@ const SUBSTITUTIONS: templateSubstitution[] = [
             return currentfilename;
         },
     },
-    ...newFilePlaceholders
-        .find((group) => group.title === "Date & Time")!
-        .placeholders.map((p) => ({
+    ...(newFilePlaceholders
+        .find((group) => group.title === "Date & Time")?.placeholders || [])
+        .map((p) => ({
             match: new RegExp(`(?<!\\$)\\$\\{${p.pattern}\\}`, "g"),
             substitution: () => {
                 dayjs.extend(advancedFormat);
@@ -45,7 +45,7 @@ export interface ParsedFileName {
 export default function parseFileName(
     template: string,
     plugin: RNotePlugin,
-    showCursor: boolean = false
+    showCursor = false
 ): ParsedFileName {
     for (const substitution of SUBSTITUTIONS) {
         const replacement = substitution.substitution(plugin);

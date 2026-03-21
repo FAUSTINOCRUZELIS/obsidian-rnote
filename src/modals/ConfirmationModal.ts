@@ -5,7 +5,7 @@ export default class ConfirmationModal extends Modal {
     onReject: () => Promise<void>;
     private initialValue: boolean;
     private toggle: ToggleComponent;
-    public confirmed: boolean = false;
+    public confirmed = false;
 
     constructor(app: App, onConfirm: () => Promise<void>, onReject: () => Promise<void>, initialValue: boolean, toggle: ToggleComponent) {
         super(app);

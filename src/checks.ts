@@ -8,10 +8,10 @@ export interface RNotePaths {
 }
 
 export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths | "error"> {
-    let errors = []
-    let userPath = plugin.settings.rnotePath;
-    let customGui = plugin.settings.customGuiCommand;
-    let customCli = plugin.settings.customCliCommand;
+    const errors = []
+    const userPath = plugin.settings.rnotePath;
+    const customGui = plugin.settings.customGuiCommand;
+    const customCli = plugin.settings.customCliCommand;
 
     if (customGui && customCli) {
         try {
@@ -42,8 +42,8 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
         }
     }
 
-    let aliasPathGui = "rnote";
-    let aliasPathCli = "rnote-cli";
+    const aliasPathGui = "rnote";
+    const aliasPathCli = "rnote-cli";
 
     try {
         await executeCommand(aliasPathCli + " --version");
@@ -52,8 +52,8 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
         errors.push((error as Error).message);
     }
 
-    let windowsGuiPath = '"c:/Program Files/RNote/bin/rnote.exe"';
-    let windowsCliPath = '"c:/Program Files/RNote/bin/rnote-cli.exe"';
+    const windowsGuiPath = '"c:/Program Files/RNote/bin/rnote.exe"';
+    const windowsCliPath = '"c:/Program Files/RNote/bin/rnote-cli.exe"';
     if (Platform.isWin) {
         try {
             await executeCommand(windowsCliPath + " --version");
@@ -63,8 +63,8 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
         }
     }
 
-    let macGuiPath = '"/Applications/RNote.app/Contents/MacOS/rnote"';
-    let macCliPath = '"/Applications/RNote.app/Contents/MacOS/rnote-cli"';
+    const macGuiPath = '"/Applications/RNote.app/Contents/MacOS/rnote"';
+    const macCliPath = '"/Applications/RNote.app/Contents/MacOS/rnote-cli"';
     if (Platform.isMacOS) {
         try {
             await executeCommand(macCliPath + " --version");

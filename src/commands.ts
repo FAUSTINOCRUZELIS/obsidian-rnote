@@ -11,11 +11,11 @@ export function createCommands(plugin: RNotePlugin) {
         id: "open",
         name: "Open current note",
         checkCallback: (checking: boolean) => {
-            let filePath = plugin.app.workspace.getActiveFile()?.path;
-            let fileExtension = plugin.app.workspace.getActiveFile()?.extension;
+            const filePath = plugin.app.workspace.getActiveFile()?.path;
+            const fileExtension = plugin.app.workspace.getActiveFile()?.extension;
             if (!filePath || (fileExtension !== "pdf" && fileExtension !== "svg" && fileExtension !== "rnote")) return false;
 
-            let rnoteFile = fileExtension === "rnote" ? plugin.app.workspace.getActiveFile() : findCorrespondingRNote(filePath, plugin);
+            const rnoteFile = fileExtension === "rnote" ? plugin.app.workspace.getActiveFile() : findCorrespondingRNote(filePath, plugin);
             if (!rnoteFile) return false;
 
             if (!checking) void openXournalppFile(rnoteFile, plugin);
@@ -68,10 +68,10 @@ export function createCommands(plugin: RNotePlugin) {
         id: "rename",
         name: "Rename current export and corresponding note",
         checkCallback: (checking: boolean) => {
-            let file = plugin.app.workspace.getActiveFile();
+            const file = plugin.app.workspace.getActiveFile();
             if (!file || (!file.name.endsWith(".pdf") && !file.name.endsWith(".svg"))) return false;
 
-            let rnoteFile = findCorrespondingRNote(file.path, plugin);
+            const rnoteFile = findCorrespondingRNote(file.path, plugin);
             if (!rnoteFile) return false;
 
             if (!checking) {
@@ -90,10 +90,10 @@ export function createCommands(plugin: RNotePlugin) {
         id: "delete",
         name: "Delete current export and corresponding note",
         checkCallback: (checking: boolean) => {
-            let file = plugin.app.workspace.getActiveFile();
+            const file = plugin.app.workspace.getActiveFile();
             if (!file || (!file.name.endsWith(".pdf") && !file.name.endsWith(".svg"))) return false;
 
-            let rnoteFile = findCorrespondingRNote(file.path, plugin);
+            const rnoteFile = findCorrespondingRNote(file.path, plugin);
             if (!rnoteFile) return false;
 
             if (!checking) {

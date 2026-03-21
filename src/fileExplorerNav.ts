@@ -3,7 +3,7 @@ import { ButtonComponent } from "obsidian";
 import CreateRNoteModalManager from "./CreateRNoteModalManager";
 
 export function addCreateXournalppNavIcon(plugin: RNotePlugin) {
-    let fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
+    const fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
 
     fileExplorers.forEach((fileExplorer) => {
         const fileExplorerView = fileExplorer.view as unknown as { headerDom?: { navButtonsEl?: HTMLElement } };
@@ -11,7 +11,7 @@ export function addCreateXournalppNavIcon(plugin: RNotePlugin) {
         const navButtonsEl = headerDom?.navButtonsEl;
 
         if (navButtonsEl && navButtonsEl.children.length > 2 && !navButtonsEl.querySelector(".rnote-create-icon")) {
-            let createRNoteButton = new ButtonComponent(navButtonsEl as HTMLElement)
+            const createRNoteButton = new ButtonComponent(navButtonsEl as HTMLElement)
                 .setClass("clickable-icon")
                 .setClass("rnote-create-icon")
                 .setIcon("pen-tool")

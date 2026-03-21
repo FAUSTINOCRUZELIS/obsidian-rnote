@@ -41,7 +41,7 @@ export default class RNoteFileNameModal extends Modal {
 		});
 
     let fileName: string = this.plugin.settings.defaultNewFileName;
-    let parsed = parseFileName(fileName, this.plugin);
+    const parsed = parseFileName(fileName, this.plugin);
     fileName = parsed.text;
     let selectedTemplatePath = "";
 	let selectedExportFormat = "pdf";

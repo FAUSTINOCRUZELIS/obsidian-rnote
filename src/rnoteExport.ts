@@ -3,16 +3,16 @@ import { exec } from 'child_process';
 import RNotePlugin from "main";
 import { checkRNoteSetup } from "./checks";
 
-export function exportRNote(plugin: RNotePlugin, filePaths: Array<string>, notify: boolean = true) {
+export function exportRNote(plugin: RNotePlugin, filePaths: Array<string>, notify = true) {
     let errors = false;
 
     filePaths.forEach(async (filePath: string) => {
-        let fs = plugin.app.vault.adapter
+        const fs = plugin.app.vault.adapter
         if (fs instanceof FileSystemAdapter) {
-            let vaultPath = fs.getBasePath();
-            let rnoteFilePath = vaultPath + "/" + filePath;
+            const vaultPath = fs.getBasePath();
+            const rnoteFilePath = vaultPath + "/" + filePath;
             
-            let rnotePaths = await checkRNoteSetup(plugin);
+            const rnotePaths = await checkRNoteSetup(plugin);
             if (!rnotePaths || rnotePaths === "error") {
                 new Notice("Error: RNote path not setup correctly. Please check docs on how to set it up.", 10000);
                 return;
@@ -21,7 +21,7 @@ export function exportRNote(plugin: RNotePlugin, filePaths: Array<string>, notif
             const isSvg = plugin.settings.svgExportFiles?.includes(filePath);
 
             if (!isSvg) {
-                let command = `${rnotePaths.cli} export doc --output-format "pdf" "${rnoteFilePath}" --on-conflict overwrite`;
+                const command = `${rnotePaths.cli} export doc --output-format "pdf" "${rnoteFilePath}" --on-conflict overwrite`;
                 exec(command, (error) => {
                     if (error) {
                         console.error(`Error converting RNote to PDF: ${error.message}`);
@@ -29,7 +29,7 @@ export function exportRNote(plugin: RNotePlugin, filePaths: Array<string>, notif
                     }
                 });
             } else {
-                let command = `${rnotePaths.cli} export doc --output-format "svg" "${rnoteFilePath}" --on-conflict overwrite`;
+                const command = `${rnotePaths.cli} export doc --output-format "svg" "${rnoteFilePath}" --on-conflict overwrite`;
                 exec(command, (error) => {
                     if (error) {
                         console.error(`Error converting RNote to SVG: ${error.message}`);
@@ -51,6 +51,6 @@ export function exportRNote(plugin: RNotePlugin, filePaths: Array<string>, notif
 export function exportAllRNote(plugin: RNotePlugin) {
   let files = plugin.app.vault.getFiles();
   files = files.filter((file) => file.extension === "rnote");
-  let filePaths = files.map((file) => file.path);
+  const filePaths = files.map((file) => file.path);
   exportRNote(plugin, filePaths);
 }

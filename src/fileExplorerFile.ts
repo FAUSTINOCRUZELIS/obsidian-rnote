@@ -10,10 +10,10 @@ export function addOpenInXournalpp(plugin: RNotePlugin) {
 }
 
 function observeFileExplorer(plugin: RNotePlugin) {
-    let fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
+    const fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
 
     fileExplorers.forEach((fileExplorer) => {
-        let container = (fileExplorer.view as { containerEl?: HTMLElement })?.containerEl;
+        const container = (fileExplorer.view as { containerEl?: HTMLElement })?.containerEl;
 
         if (container) {
             // Observe changes in the file explorer DOM
@@ -28,10 +28,10 @@ function observeFileExplorer(plugin: RNotePlugin) {
 }
 
 function applyXournalppTags(plugin: RNotePlugin) {
-    let fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
+    const fileExplorers = plugin.app.workspace.getLeavesOfType("file-explorer");
 
     fileExplorers.forEach((fileExplorer) => {
-        let allFiles: { [key: string]: { tagEl: HTMLElement } } = (fileExplorer.view as unknown as { fileItems: { [key: string]: { tagEl: HTMLElement } } })?.fileItems;
+        const allFiles: { [key: string]: { tagEl: HTMLElement } } = (fileExplorer.view as unknown as { fileItems: { [key: string]: { tagEl: HTMLElement } } })?.fileItems;
         if (!allFiles) return;
 
         Object.entries(allFiles).forEach(([filePath, value]) => {

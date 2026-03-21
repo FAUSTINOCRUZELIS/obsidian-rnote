@@ -183,9 +183,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			});
   
     // Default Name
-    let defaultNameDesc =
+    const defaultNameDesc =
         "The default name for new RNote files. Use placeholders `${}` to insert dynamic values. Preview: ";
-    let defaultNameSetting = new Setting(containerEl)
+    const defaultNameSetting = new Setting(containerEl)
         .setName("Default name for new RNote files")
         .addText((toggle) => {
             toggle
