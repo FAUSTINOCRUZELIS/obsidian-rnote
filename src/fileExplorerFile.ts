@@ -36,7 +36,7 @@ function applyXournalppTags(plugin: RNotePlugin) {
 
         Object.entries(allFiles).forEach(([filePath, value]) => {
             if (filePath.endsWith(".pdf") || filePath.endsWith(".svg")) {
-                let rnoteFile = findCorrespondingRNote(filePath, plugin);
+                const rnoteFile = findCorrespondingRNote(filePath, plugin);
                 if (rnoteFile instanceof TFile && value?.tagEl) {
                     const tagEl = value.tagEl as HTMLElement;
 
