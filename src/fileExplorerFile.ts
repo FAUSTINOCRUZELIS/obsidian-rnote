@@ -38,7 +38,7 @@ function applyXournalppTags(plugin: RNotePlugin) {
             if (filePath.endsWith(".pdf") || filePath.endsWith(".svg")) {
                 const rnoteFile = findCorrespondingRNote(filePath, plugin);
                 if (rnoteFile instanceof TFile && value?.tagEl) {
-                    const tagEl = value.tagEl as HTMLElement;
+                    const tagEl = value.tagEl;
 
                     if (tagEl && (tagEl.innerText != "RNOTE" || !tagEl.classList.contains("clickable-tag"))) {
                         tagEl.innerText = "RNOTE";

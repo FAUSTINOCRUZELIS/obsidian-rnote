@@ -108,7 +108,7 @@ export function createCommands(plugin: RNotePlugin) {
         name: "Search and open note",
         callback: () => {
             const searchModal = new SearchRNoteModal(plugin.app, plugin);
-            searchModal.setPlaceholder("Search for a RNote note");
+            searchModal.setPlaceholder("Search for a rnote note");
             searchModal.setInstructions([
                 { command: "Arrows", purpose: "to navigate" },
                 { command: "Tab", purpose: "to autocomplete" },

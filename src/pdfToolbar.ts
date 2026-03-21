@@ -28,9 +28,9 @@ export function createPdfToolbarButton(pdfToolbar: HTMLElement, rnoteFile: TFile
     const rnoteButton = new ButtonComponent(pdfToolbar)
         .setClass("clickable-icon")
         .setClass("rnote-open-icon")
-        .setButtonText('Edit in RNote')
+        .setButtonText('Edit in rnote')
         .setIcon('pen-tool')
-        .setTooltip('Edit in RNote');
+        .setTooltip('Edit in rnote');
 
         rnoteButton.onClick(() =>  {
             void openXournalppFile(rnoteFile, plugin);

@@ -6,46 +6,48 @@ import { checkRNoteSetup } from "./checks";
 export function exportRNote(plugin: RNotePlugin, filePaths: Array<string>, notify = true) {
     let errors = false;
 
-    filePaths.forEach(async (filePath: string) => {
-        const fs = plugin.app.vault.adapter
-        if (fs instanceof FileSystemAdapter) {
-            const vaultPath = fs.getBasePath();
-            const rnoteFilePath = vaultPath + "/" + filePath;
-            
-            const rnotePaths = await checkRNoteSetup(plugin);
-            if (!rnotePaths || rnotePaths === "error") {
-                new Notice("Error: RNote path not setup correctly. Please check docs on how to set it up.", 10000);
-                return;
-            }
-            
-            const isSvg = plugin.settings.svgExportFiles?.includes(filePath);
+    void (async () => {
+        for (const filePath of filePaths) {
+            const fs = plugin.app.vault.adapter
+            if (fs instanceof FileSystemAdapter) {
+                const vaultPath = fs.getBasePath();
+                const rnoteFilePath = vaultPath + "/" + filePath;
+                
+                const rnotePaths = await checkRNoteSetup(plugin);
+                if (!rnotePaths || rnotePaths === "error") {
+                    new Notice("Error: rnote path not setup correctly. Please check docs on how to set it up.", 10000);
+                    return;
+                }
+                
+                const isSvg = plugin.settings.svgExportFiles?.includes(filePath);
 
-            if (!isSvg) {
-                const command = `${rnotePaths.cli} export doc --output-format "pdf" "${rnoteFilePath}" --on-conflict overwrite`;
-                exec(command, (error) => {
-                    if (error) {
-                        console.error(`Error converting RNote to PDF: ${error.message}`);
-                        errors = true;
-                    }
-                });
-            } else {
-                const command = `${rnotePaths.cli} export doc --output-format "svg" "${rnoteFilePath}" --on-conflict overwrite`;
-                exec(command, (error) => {
-                    if (error) {
-                        console.error(`Error converting RNote to SVG: ${error.message}`);
-                        errors = true;
-                    }
-                });
+                if (!isSvg) {
+                    const command = `${rnotePaths.cli} export doc --output-format "pdf" "${rnoteFilePath}" --on-conflict overwrite`;
+                    exec(command, (error) => {
+                        if (error) {
+                            console.error(`Error converting RNote to PDF: ${error.message}`);
+                            errors = true;
+                        }
+                    });
+                } else {
+                    const command = `${rnotePaths.cli} export doc --output-format "svg" "${rnoteFilePath}" --on-conflict overwrite`;
+                    exec(command, (error) => {
+                        if (error) {
+                            console.error(`Error converting RNote to SVG: ${error.message}`);
+                            errors = true;
+                        }
+                    });
+                }
             }
         }
-    })
-    
-    if (errors) {
-        new Notice("Error converting RNote to PDF. Check the console for more information.");
-        return
-    }
-    
-    if (notify) new Notice("Exported all RNote notes successfully.")
+        
+        if (errors) {
+            new Notice("Error converting rnote to PDF. Check the console for more information.");
+            return;
+        }
+        
+        if (notify) new Notice("Exported all rnote notes successfully.");
+    })();
 }
 
 export function exportAllRNote(plugin: RNotePlugin) {

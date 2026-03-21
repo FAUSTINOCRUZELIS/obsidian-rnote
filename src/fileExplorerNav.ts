@@ -11,11 +11,11 @@ export function addCreateXournalppNavIcon(plugin: RNotePlugin) {
         const navButtonsEl = headerDom?.navButtonsEl;
 
         if (navButtonsEl && navButtonsEl.children.length > 2 && !navButtonsEl.querySelector(".rnote-create-icon")) {
-            const createRNoteButton = new ButtonComponent(navButtonsEl as HTMLElement)
+            const createRNoteButton = new ButtonComponent(navButtonsEl)
                 .setClass("clickable-icon")
                 .setClass("rnote-create-icon")
                 .setIcon("pen-tool")
-                .setTooltip("Create new RNote");
+                .setTooltip("Create new rnote");
 
             createRNoteButton.onClick(() => {
                 new CreateRNoteModalManager(plugin.app, plugin);

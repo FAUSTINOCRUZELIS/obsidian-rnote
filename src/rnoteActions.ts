@@ -11,21 +11,21 @@ export async function openXournalppFile(rnoteFile: TFile, plugin: RNotePlugin): 
         const vaultPath = fs.getBasePath();
 
         if (!rnotePaths || rnotePaths === "error") {
-            new Notice("Error: RNote path not setup correctly. Please check docs on how to set it up.", 10000);
+            new Notice("Error: rnote path not setup correctly. Please check docs on how to set it up.", 10000);
             return;
         }
 
         const command = `${rnotePaths.gui} "${vaultPath + "/" + rnoteFile.path}"`;
-        new Notice("Opening file in RNote");
+        new Notice("Opening file in rnote");
         exec(command, (error) => {
             if (error) {
-                new Notice("Error opening file in RNote. Check console for error message.");
+                new Notice("Error opening file in rnote. Check console for error message.");
                 console.error(`Error opening file in RNote: ${error.message}`);
                 return;
             }
         });
     } else {
-        new Notice("Error opening file in RNote. Check console for error message.");
+        new Notice("Error opening file in rnote. Check console for error message.");
     }
 }
 
@@ -41,9 +41,9 @@ export async function createRNoteFile(plugin: RNotePlugin, newNoteName: string, 
         } else {
             await plugin.app.vault.create(newNotePath, "");
         }
-        new Notice("RNote note created");
+        new Notice("Rnote note created");
     } catch (e) {
-        new Notice("Error: Could not create a RNote note: " + e.message);
+        new Notice("Error: Could not create a rnote note: " + e.message);
     }
 }
 

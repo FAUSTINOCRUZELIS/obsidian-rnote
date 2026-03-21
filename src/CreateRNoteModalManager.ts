@@ -44,16 +44,16 @@ export default class CreateRNoteModalManager {
             new RNoteFileNameModal(
                 this.plugin.app,
                 this.plugin,
-                (fileName, templatePath, exportFormat) => { this.onCreate(folderPath, fileName, exportFormat, templatePath); },
-                (fileName, templatePath, exportFormat) => { this.onCreateAndOpen(folderPath, fileName, exportFormat, templatePath); },
+                (fileName, templatePath, exportFormat) => { void this.onCreate(folderPath, fileName, exportFormat, templatePath); },
+                (fileName, templatePath, exportFormat) => { void this.onCreateAndOpen(folderPath, fileName, exportFormat, templatePath); },
                 templates,
                 this.plugin.settings.defaultTemplatePath
             )
-                .setTitle("Create a new RNote note")
+                .setTitle("Create a new rnote note")
                 .open();
 
         const folderSuggestModal = new FolderSuggestModal(this.app, this.plugin, onCloseFolderModal);
-        folderSuggestModal.setPlaceholder("Select a folder for the new RNote note");
+        folderSuggestModal.setPlaceholder("Select a folder for the new rnote note");
         folderSuggestModal.setInstructions([
             { command: "Arrows", purpose: "to navigate" },
             { command: "Tab", purpose: "to autocomplete folder" },

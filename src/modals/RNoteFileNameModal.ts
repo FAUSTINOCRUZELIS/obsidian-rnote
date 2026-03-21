@@ -86,7 +86,7 @@ export default class RNoteFileNameModal extends Modal {
 		});
 
 		const textComponent = new TextComponent(container)
-			.setPlaceholder("my_note")
+			.setPlaceholder("My_note")
 			.onChange((i) => {
 				fileName = i;
 			});

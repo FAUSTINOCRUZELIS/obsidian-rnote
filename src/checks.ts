@@ -74,7 +74,7 @@ export async function checkRNoteSetup(plugin: RNotePlugin): Promise<RNotePaths |
         }
     }
 
-    new Notice("Error: RNote path not setup correctly. Please check docs on how to set it up.", 10000);
+    new Notice("Error: rnote path not setup correctly. Please check docs on how to set it up.", 10000);
     errors.forEach(error => console.error("RNote Error:" + error))
     return "error";
 }

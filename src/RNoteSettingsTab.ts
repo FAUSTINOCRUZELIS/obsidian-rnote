@@ -20,9 +20,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl)
-			.setName("Auto export RNote files")
+			.setName("Auto export rnote files")
 			.setDesc(
-				"Automatically export RNote files to PDF upon modification."
+				"Automatically export rnote files to PDF upon modification."
 			)
 			.addToggle((toggle) => {
 				toggle
@@ -63,9 +63,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("RNote installation path")
+			.setName("Rnote installation path")
 			.setDesc(
-				"The path where RNote is installed (leave empty for system default)."
+				"The path where rnote is installed (leave empty for system default)."
 			)
 			.addText((toggle) => {
 				toggle
@@ -77,14 +77,14 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Custom RNote GUI command")
+			.setName("Custom rnote GUI command")
 			.setDesc(
-				"Explicit command to launch the RNote GUI (useful for Flatpak/Snap). Overrides installation path if both CLI and GUI custom commands are provided."
+				"Explicit command to launch the rnote GUI (useful for Flatpak/Snap). Overrides installation path if both CLI and GUI custom commands are provided."
 			)
 			.addText((text) => {
 				text
 					.setValue(this.plugin.settings.customGuiCommand)
-					.setPlaceholder("e.g. flatpak run com.github.flxzt.rnote")
+					.setPlaceholder("E.g. flatpak run com.github.flxzt.rnote")
 					.onChange((value) => {
 						this.plugin.settings.customGuiCommand = value;
 						void this.plugin.saveSettings();
@@ -92,14 +92,14 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Custom RNote CLI command")
+			.setName("Custom rnote CLI command")
 			.setDesc(
-				"Explicit command to launch the RNote CLI (useful for Flatpak/Snap)."
+				"Explicit command to launch the rnote CLI (useful for Flatpak/Snap)."
 			)
 			.addText((text) => {
 				text
 					.setValue(this.plugin.settings.customCliCommand)
-					.setPlaceholder("e.g. flatpak run --command=rnote-cli com.github.flxzt.rnote")
+					.setPlaceholder("E.g. flatpak run --command=rnote-cli com.github.flxzt.rnote")
 					.onChange((value) => {
 						this.plugin.settings.customCliCommand = value;
 						void this.plugin.saveSettings();
@@ -107,13 +107,13 @@ export class RNoteSettingsTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("RNote templates folder")
+			.setName("Rnote templates folder")
 			.setDesc(
-				"Relative path to the folder that contains your RNote .rnote templates."
+				"Relative path to the folder that contains your rnote .rnote templates."
 			)
 			.addText((text) => {
 				text.setValue(this.plugin.settings.templatesFolder)
-					.setPlaceholder("e.g. templates/rnote")
+					.setPlaceholder("E.g. templates/rnote")
 					.onChange((value) => {
 						this.plugin.settings.templatesFolder = value;
 						void this.plugin.saveSettings();
@@ -133,9 +133,9 @@ export class RNoteSettingsTab extends PluginSettingTab {
 
 
 		new Setting(containerEl)
-			.setName("Default RNote template")
+			.setName("Default rnote template")
 			.setDesc(
-				"The default template to use when creating new RNote files from the templates folder."
+				"The default template to use when creating new rnote files from the templates folder."
 			)
 			.addDropdown((dropdown) => {
 				const templatesFolder =
@@ -168,14 +168,14 @@ export class RNoteSettingsTab extends PluginSettingTab {
 
 		
 		new Setting(containerEl)
-			.setName("Default path for new RNote files")
+			.setName("Default path for new rnote files")
 			.setDesc(
-				"The relative path for new RNote files. This folder will be used unless a full path is specified during file creation (leave empty to use root folder)."
+				"The relative path for new rnote files. This folder will be used unless a full path is specified during file creation (leave empty to use root folder)."
 			)
 			.addText((toggle) => {
 				toggle
 					.setValue(this.plugin.settings.defaultNewFilePath)
-					.setPlaceholder("e.g. notes")
+					.setPlaceholder("E.g. notes")
 					.onChange((value) => {
 						this.plugin.settings.defaultNewFilePath = value;
 						void this.plugin.saveSettings();
@@ -184,13 +184,13 @@ export class RNoteSettingsTab extends PluginSettingTab {
   
     // Default Name
     const defaultNameDesc =
-        "The default name for new RNote files. Use placeholders `${}` to insert dynamic values. Preview: ";
+        "The default name for new rnote files. Use placeholders `${}` to insert dynamic values. Preview: ";
     const defaultNameSetting = new Setting(containerEl)
-        .setName("Default name for new RNote files")
+        .setName("Default name for new rnote files")
         .addText((toggle) => {
             toggle
                 .setValue(this.plugin.settings.defaultNewFileName)
-                .setPlaceholder("e.g. ${MM}-${cursor}-note")
+                .setPlaceholder("E.g. ${MM}-${cursor}-note")
                 .onChange((value) => {
                     this.plugin.settings.defaultNewFileName = value;
                     void this.plugin.saveSettings();

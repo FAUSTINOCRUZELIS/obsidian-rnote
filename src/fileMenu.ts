@@ -34,14 +34,14 @@ export function addXournalppOptionsToFileMenu(menu: Menu, file: TFile | TFolder,
 
 function addOpenInXournalppMenu(menu: Menu, rnoteFile: TFile, plugin: RNotePlugin) {
     menu.addItem((item) => {
-        item.setTitle("Open in RNote")
+        item.setTitle("Open in rnote")
             .setIcon("pen-tool")
             .onClick(() => {
                 void openXournalppFile(rnoteFile, plugin);
             });
     });
     menu.addItem((item) => {
-        item.setTitle("Update from RNote")
+        item.setTitle("Update from rnote")
             .setIcon("rotate-cw")
             .onClick(() => {
                 let filePath = plugin.app.workspace.getActiveFile()?.path as string;
@@ -86,7 +86,7 @@ function addExportAsPdfMenu(menu: Menu, rnoteFile: TFile, plugin: RNotePlugin) {
 
 function addCreateXournalppMenu(menu: Menu, folder: TFolder, plugin: RNotePlugin) {
     menu.addItem((item) => {
-        item.setTitle("Create new RNote")
+        item.setTitle("Create new rnote")
             .setIcon("pen-tool")
             .onClick(() => {
                 new CreateRNoteModalManager(plugin.app, plugin, folder?.path ?? "");
