@@ -1,4 +1,4 @@
-import { FileSystemAdapter, Notice, TFile } from "obsidian"
+import { FileSystemAdapter, Notice } from "obsidian"
 import { exec } from 'child_process';
 import RNotePlugin from "main";
 import { checkRNoteSetup } from "./checks";

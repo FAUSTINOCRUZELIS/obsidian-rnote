@@ -124,7 +124,7 @@ export default class RNoteFileNameModal extends Modal {
 			});
 
 		new ButtonComponent(buttonRow)
-			.setButtonText("Create & Open")
+			.setButtonText("Create & open")
 			.setTooltip("Shift + Enter")
 			.onClick(() => {
 				this.createAndOpenFile(fileName, selectedTemplatePath, selectedExportFormat);

@@ -16,9 +16,9 @@ export class NewFilePlacholderHelpModal extends Modal {
 
     onOpen() {
         const { contentEl, modalEl } = this;
-        modalEl.style.width = "1000px";
+        modalEl.setCssProps({ width: "1000px" });
 
-        contentEl.createEl("h2", { text: "Supported Placeholders" });
+        contentEl.createEl("h2", { text: "Supported placeholders" });
 
         this.newFilePlaceholders.forEach((group) => {
             contentEl.createEl("h3", { text: group.title });

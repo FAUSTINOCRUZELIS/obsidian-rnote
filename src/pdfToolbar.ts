@@ -1,7 +1,7 @@
 import RNotePlugin from "main";
-import { MarkdownView, TFile, getLinkpath } from "obsidian";
+import { TFile } from "obsidian";
 import { findCorrespondingRNote } from "./rnoteActions";
-import { ButtonComponent, App } from 'obsidian';
+import { ButtonComponent } from 'obsidian';
 import { openXournalppFile } from './rnoteActions';
 
 export function addOpenInXournalppToPdfToolbar(file: TFile, plugin: RNotePlugin) {
@@ -33,7 +33,7 @@ export function createPdfToolbarButton(pdfToolbar: HTMLElement, rnoteFile: TFile
         .setTooltip('Edit in RNote');
 
         rnoteButton.onClick(() =>  {
-            openXournalppFile(rnoteFile, plugin);
+            void openXournalppFile(rnoteFile, plugin);
         })
 
         pdfToolbar.appendChild(rnoteButton.buttonEl);

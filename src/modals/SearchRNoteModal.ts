@@ -58,7 +58,7 @@ export default class SearchRNoteModal extends FuzzySuggestModal<TFile> {
 
     onChooseItem(file: TFile, event: MouseEvent | KeyboardEvent): void {
         if (event.shiftKey) {
-            openXournalppFile(file, this.plugin);
+            void openXournalppFile(file, this.plugin);
             this.close();
         } else {
             const pdfFilePath = file.path.replace(".rnote", ".pdf");
@@ -68,7 +68,7 @@ export default class SearchRNoteModal extends FuzzySuggestModal<TFile> {
                 return;
             }
 
-            this.plugin.app.workspace
+            void this.plugin.app.workspace
                 .getLeaf(event.ctrlKey || event.metaKey ? "split" : undefined, "vertical")
                 .openFile(pdfFile);
             this.close();
