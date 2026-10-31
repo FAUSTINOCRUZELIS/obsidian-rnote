@@ -38,13 +38,37 @@ export async function createRNoteFile(plugin: RNotePlugin, newNoteName: string, 
         const templatePath = selectedTemplatePath || plugin.settings.defaultTemplatePath;
         if (templatePath && await fs.exists(templatePath)) {
             await fs.copy(templatePath, newNotePath);
-        } else {
+        } else if (!(await createEmptyRNoteDocument(plugin, newNotePath))) {
+            // fallback: an empty file is not a valid rnote document, but at least it exists
             await plugin.app.vault.create(newNotePath, "");
         }
         new Notice("Rnote note created");
     } catch (e) {
         new Notice("Error: Could not create a rnote note: " + e.message);
     }
+}
+
+/**
+ * Creates a valid (empty) rnote document using the rnote-cli.
+ *
+ * `vault.create(path, "")` only writes a zero-byte file, which rnote refuses to open
+ * ("decompressing bytes failed"), so new notes must be created by the cli instead.
+ */
+async function createEmptyRNoteDocument(plugin: RNotePlugin, newNotePath: string): Promise<boolean> {
+    const adapter = plugin.app.vault.adapter;
+    if (!(adapter instanceof FileSystemAdapter)) return false;
+
+    const rnotePaths = await checkRNoteSetup(plugin);
+    if (!rnotePaths || rnotePaths === "error") return false;
+
+    const absPath = adapter.getBasePath() + "/" + newNotePath;
+
+    return await new Promise<boolean>((resolve) => {
+        exec(`${rnotePaths.cli} create "${absPath}"`, (error) => {
+            if (error) console.error(`Error creating the rnote document: ${error.message}`);
+            resolve(!error);
+        });
+    });
 }
 
 export function findCorrespondingRNote(filePath: string, plugin: RNotePlugin): TFile | undefined {
