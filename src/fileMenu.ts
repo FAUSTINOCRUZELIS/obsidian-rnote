@@ -44,9 +44,8 @@ function addOpenInXournalppMenu(menu: Menu, rnoteFile: TFile, plugin: RNotePlugi
         item.setTitle("Update from rnote")
             .setIcon("rotate-cw")
             .onClick(() => {
-                let filePath = plugin.app.workspace.getActiveFile()?.path as string;
-                filePath = filePath?.replace(".pdf", ".rnote").replace(".svg", ".rnote");
-                exportRNote(plugin, [filePath]);
+                // use the file the menu belongs to, not whatever tab happens to be active
+                exportRNote(plugin, [rnoteFile.path]);
             });
     });
 }

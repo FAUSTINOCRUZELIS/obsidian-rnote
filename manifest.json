@@ -1,11 +1,10 @@
 {
     "id": "rnote",
     "name": "RNote",
-    "version": "1.0.2",
+    "version": "1.2.0",
     "minAppVersion": "1.5.12",
-    "description": "Integration with RNote for handwritten notes and annotations.",
-    "author": "Darsh Pareek",
-    "authorUrl": "https://darshpareek.github.io",
-    "fundingUrl": "NO FUNDING :(",
+    "description": "Integration with RNote for handwritten notes and annotations. Fork with working Windows support and bug fixes.",
+    "author": "Darsh Pareek (fork maintained by FAUSTINOCRUZELIS)",
+    "authorUrl": "https://github.com/FAUSTINOCRUZELIS",
     "isDesktopOnly": true
 }
